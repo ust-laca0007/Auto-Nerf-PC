@@ -1,10 +1,5 @@
 package j4kdemo.kinectviewerapp;
 
-import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.net.Socket;
-import java.util.Arrays;
-
 import javax.swing.JLabel;
 
 import edu.ufl.digitalworlds.j4k.DepthMap;
@@ -56,101 +51,21 @@ public class Kinect extends J4KSDK{
 	public Kinect()
 	{
 		super();
-		new Thread(new Umm(this)).start();
+		new Thread(new EV3Thread(this)).start();
 	}
 
 	public Kinect(byte type)
 	{
 		super(type);
-		new Thread(new Umm(this)).start();
+		new Thread(new EV3Thread(this)).start();
 	}
 	
-	public Skeleton[] skellies() {
+	public Skeleton[] getSkeletons() {
 		try {
 			return this.viewer.skeletons;
 		} catch (Exception e) {
 			return new Skeleton[0];
 		}	
-	}
-	
-	public class Umm implements Runnable {
-		
-		public class EV3Conn {
-			
-			private Socket s;
-			private ObjectOutputStream oos;
-			
-			public EV3Conn() throws IOException {
-				this.s = new Socket("10.0.1.1", 1337);
-				this.oos = new ObjectOutputStream(s.getOutputStream());
-			}
-			
-			public void write(double[] d) {
-				try {
-					oos.writeObject(d);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-			
-			public void close() {
-				try {
-					oos.close();
-					s.close();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		}
-
-		Kinect outer;
-		
-		public Umm(Kinect outer) {
-			this.outer = outer;
-		}
-		
-		@Override
-		public void run() {
-			EV3Conn c;
-			try {
-				c = new EV3Conn();
-			} catch (IOException e1) {
-				e1.printStackTrace();
-				return;
-			}
-			
-			while (true) {
-				try { Thread.sleep(500); } catch (Exception e) {}
-
-				boolean moved = false;
-				
-				Skeleton[] s = outer.skellies();
-				if (s==null) continue;
-				for(int i=0;i<s.length;i++)
-				{
-					if (s[i]==null) continue;
-					double[] arr = s[i].get3DJoint(1);
-
-					if (s[i].getTimesDrawn()<=10 && s[i].isTracked()) {
-						System.out.println(Arrays.toString(arr));
-						System.out.println(s[i].getPlayerID());
-						if (!moved) {
-							c.write(arr);
-							moved = true;
-						}
-					}
-				}
-			}
-				/*	    for(int i=0;i<skeletons.length;i++)
-	    	if(skeletons[i]!=null) 
-	    	{
-	    		if(skeletons[i].getTimesDrawn()<=10 && skeletons[i].isTracked())
-	    		{
-	    			skeletons[i].draw(gl);
-	    			skeletons[i].increaseTimesDrawn();
-	    		}
-	    	}*/
-		}
 	}
 
 	public void setViewer(ViewerPanel3D viewer){this.viewer=viewer;}

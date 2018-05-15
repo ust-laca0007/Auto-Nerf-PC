@@ -17,7 +17,7 @@ This driver allows a PC to communicate with an EV3 with leJOS over USB.
 
 ## Project Directions
 1. Clone both [Auto-Nerf-Turret](https://github.com/ust-laca0007/Auto-Nerf-Turret) and [Auto-Nerf-PC](https://github.com/ust-laca0007/Auto-Nerf-PC).
-2. Boot up leJOS on the EV3, and plug the EV3 into your motors and the computer.
+2. Boot up leJOS on the EV3, and plug the EV3 into your motors and the computer. Check the IP address of the EV3, and make sure that the ip address in ip.properties matches it.
 3. In Eclipse, start Turret.java from the Auto-Nerf-Turret project. This will make Eclipse leJOS plugin send the program to the EV3 after it compiles it, where it will wait for the PC to connect to it.
 4. In Eclipse, start KinectViewerApp.java from the Auto-Nerf-PC project. This will display a view of what the Kinect sees, as well as open a connection to the EV3. When the Kinect detects someone's "skeleton" (the viewer will show a red stick figure on their body), the KinectViewerApp will start sending targetting data to the EV3, and the turret will track the user. When the user stands still for a moment or two, the turret detects this and attempts to shoot them.
 5. When you're done shooting people, close out of the KinectViewerApp on the computer. The EV3 will detect that the computer has disconnected, and will stop moving the turret. You can press the middle button the turret to reset it, so that you can restart the KinectViewerApp and reconnect to the EV3, or press any other button to quit out of Turret.java.
